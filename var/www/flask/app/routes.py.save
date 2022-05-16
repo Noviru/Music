@@ -1,0 +1,97 @@
+from flask import Flask, render_template, request, abort, url_for, redirect
+from app import app
+import requests
+import os
+
+
+counter = 0
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    zoneList = updateZoneInfo()
+    return render_template('index.html', zoneList = zoneList, counter = counter)
+
+#../sbin/music-cli signer leave -s signer1anton -g Atest -v -d | För att ta bort signer
+
+def updateZoneInfo():
+    headers = {'Accept': 'application/json', 'X-API-KEY': 'you-have-stolen-my-frotzblinger'}
+    url = 'https://13.53.85.107:8080/api/v1/zone'
+    payload = {  "Command": "list"
+    }
+    response = requests.post(url,verify = '/home/ubuntu/music/etc/certs/RootCA.pem', headers=headers, json=payload)
+    response_json = response.json()
+
+    #index 0 = State, 1 = NextState, 2 = proccess. 
+    zoneList =[response_json['Zones']["anton.catch22.se."]['State'], response_json['Zones']["anton.catch22.se."]['NextState'],response_json['Zones']["anton.catch22.se."]['SGroup']['CurrentProcess']]
+
+    return zoneList
+
+
+
+@app.route('/nextState', methods = ['GET', 'POST'])
+def nextState():
+    #../sbin/music-cli zone step-fsm -z anton.catch22.se
+    global counter
+    counter +=1 
+    urlZone = 'https://13.53.85.107:8080/api/v1/zone'
+    os.chdir("/home/ubuntu/music/music-cli")
+    os.system("../sbin/music-cli zone step-fsm -z anton.catch22.se")
+    os.chdir("/home/ubuntu/scanner-lite/cmd/scanner")
+    os.system("./scanner")
+
+
+    #if oldState =! newState
+    #   call ajax function, make update on site
+    #   Do this is jinja? maybe better
+    #   
+    #
+    #
+    #
+    zoneList = updateZoneInfo()
+
+    print("hej")
+    return redirect(url_for('index',zoneList=zoneList, counter = counter))
+
+
+@app.route('/ajaxTest', methods = ['GET', 'POST'])
+def ajaxtest():
+    #Kom hit varje sekund och generera en ny output beroende på vilket steg den är på
+    global counter
+    counter += 1
+    zoneList = updateZoneInfo()
+    output = ""
+    for x in range(counter):
+        output += "CHECK!!!!         "
+
+    return output
+
+@app.route('/update', methods = ['GET', 'POST'])
+def update():
+    zoneList = updateZoneInfo()
+    return render_template('index.html', zoneList = zoneList,counter = counter)
+
+
+
+
+@app.route('/reset', methods = ['GET', 'POST'])
+def reset():
+    global counter
+    counter = 0
+    #Kör alla .sh, men göra music manuellt, och signers. 
+    os.chdir("/home/ubuntu")
+    os.system("sh reset_parent.sh")
+    os.chdir("/home/ubuntu/music/music-cli")
+    os.system("sh antonlab_test_setup.sh")
+    zoneList = updateZoneInfo()
+
+    #Kör de två .sh på signers och stäng av music manuellt och sätt igång den. 
+    return render_template('index.html', zoneList = zoneList,counter = counter)
+
+
+
+
+
+
+

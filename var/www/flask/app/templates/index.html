@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="{{ url_for('static', filename = 'js/java.js') }}"></script>
+        <link rel ="stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<title>Music</title>
+</head>
+<body>
+	<header>
+	<center><h1>Music</h1></center>
+	</header>
+	<!--
+	<script>
+                  function testFunction() {
+                    const element = document.getElementById("process")
+		
+                      fetch("/currentProcess")
+                      .then(response => response.json())
+                      .then(json => element.innerHTML = json.process)
+                      .catch(error => console.error(error))
+                  }
+		    document.addEventListener("DOMContentLoaded", function(event) {
+		    setInterval(testFunction, 1000) // interval value in milliseconds
+		  })
+                </script>
+-->
+
+{%for zone in zoneList%}
+{%if zone[1] == 'add-signer'%}
+<div class="container" id = "container1">
+<h3 class = "text-center">The current state is: {{zone[1]}}</h3>
+<h3 class = "text-center">The current process is:<div id = "{{zone[2]}}_process"></div></h3>
+  <div class="row">
+     <div class="col-sm custom-col"><h3>{{zone[2]}}</h3></div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_signers-unsynced">
+     Signer-unsynced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_dnskey-synced">
+      Dns-key-synced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_cds-added">
+      cds-added
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_parent-ds-sycned">
+      parent-ds-synced
+    </div>
+
+    <div class="col-sm custom-col" id = "{{zone[2]}}_ds-propagated">
+      ds-propagated
+    </div>
+
+    <div class="col-sm custom-col" id = "{{zone[2]}}_csync-added">
+      csync-added
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_parent-ns-synced">
+      Parent-ns-synced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_stop">
+      stop
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_stopped">
+      Stopping process
+    </div>
+  </div>
+</div>
+<div class = "row">
+                 <div class="col-sm">
+                <form action = "{{url_for('reset')}}" method = "POST">
+                <input type="submit" value = "Reset"  class="btn btn-outline-primary"></form>
+                </div>
+                <div class="col-sm">
+                <input type="submit" id ="testButton" value = "Next state" onclick ="nextStates({{zone}})" class="btn btn-outline-primary">
+                </div>
+                <div class="col-sm">
+                <input type="submit" id ="removeSigner" value = "Remove signer" onclick = "removeSigner({{zone}})" class="btn btn-outline-primary">
+                </div>
+                </div>
+{%endif%}
+
+{%if zone[1] == 'remove-signer'%}
+<div class="container" id = "container2">
+<h3 class = "text-center">The current state is: {{zone[1]}}</h3>
+<h3 class = "text-center">The current process is:<div id = "{{zone[2]}}_process"></div></h3>
+  <div class="row">
+  <div class="col-sm"><h3>{{zone[2]}}</h3></div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_signer-unsynced">
+     Signer-unsynced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_nses-synced">
+      nses-synced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_csync-added">
+      csync-added
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_parent-ns-synced">
+      parent-ns-synced
+    </div>
+
+    <div class="col-sm custom-col" id = "{{zone[2]}}_ns-propagated">
+      ns-propagated
+    </div>
+
+    <div class="col-sm custom-col" id = "{{zone[2]}}_dnskeys-synced">
+      dnskeys-synced
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_cds-added">
+      cds-added
+    </div>
+	<div class="col-sm custom-col" id = "{{zone[2]}}_parent-ds-synced">
+      parent-ds-synced
+    	</div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_stop">
+      stop
+    </div>
+    <div class="col-sm custom-col" id = "{{zone[2]}}_stopped">
+      Stopping process
+    </div>
+  </div>
+</div>
+		<div class = "row">
+                 <div class="col-sm">
+                <form action = "{{url_for('reset')}}" method = "POST">
+                <input type="submit" value = "Reset"  class="btn btn-outline-primary"></form>
+                </div>
+                <div class="col-sm">
+                <input type="submit" id ="testButton" value = "Next state" onclick ="nextStates({{zone}})" class="btn btn-outline-primary">
+                </div>
+                <div class="col-sm">
+                <input type="submit" id ="removeSigner" value = "Remove signer" onclick = "removeSigner({{zone}})" class="btn btn-outline-primary">
+                </div>
+                </div>
+{%endif%}
+
+{%endfor%}
+<!--
+<script>
+                  function updateFunction() {
+                      fetch("/currentProcess")
+		      .then(function(response) {
+			return response.text()
+			}).then(function(text){
+			const myJson = JSON.parse(text)
+			let counter = 1;
+			if(myJson.state == "add-signer" || myJson.state == ''){
+			const signerU = document.getElementById("signer-unsynced")
+                        const dnsKey = document.getElementById("dns-key-synced")
+                        const cdsAdded = document.getElementById("cds-added")
+                        const parentDs = document.getElementById("parent-ds-synced")
+                        const csyncAdded = document.getElementById("csync-added")
+                        const parentNs = document.getElementById("parent-ns-synced")
+                        const stop = document.getElementById("stop")
+                        const stopped = document.getElementById("stopped")
+                        const dsProp = document.getElementById("ds-propagated")
+			switch(myJson.process){
+			  case "signers-unsynced":
+			    signerU.style.backgroundColor = "#00FF00";
+			    dnsKey.style.backgroundColor="#FFFF00";
+			    break;
+                          case "dnskeys-synced":
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+			    cdsAdded.style.backgroundColor="#FFFF00";
+			    break;
+                          case "cds-added":
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+			    parentDs.style.backgroundColor="#FFFF00";
+                            break;
+                          case "parent-ds-synced":
+			    signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+			    dsProp.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "ds-propagated":
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+                            dsProp.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "csync-added":
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+                            dsProp.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+			    parentNs.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "parent-ns-synced":
+			    signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+                            dsProp.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+			    stop.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "stop":
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+                            dsProp.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            stop.style.backgroundColor = "#00FF00";
+			    stopped.style.backgroundColor = "#FFFF00";
+			    counter +=1;
+                            break;
+                          case '':
+                            signerU.style.backgroundColor = "#00FF00";
+                            dnsKey.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDs.style.backgroundColor = "#00FF00";
+                            dsProp.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            stop.style.backgroundColor = "#00FF00";
+                            stopped.style.backgroundColor = "#00FF00";
+			    document.getElementById("removeSigner").disabled = false;
+                            break;
+			}
+		}
+		if((myJson.state == "remove-signer") ||(myJson.state == '' && counter == 2)){
+		const signerU = document.getElementById("signer-unsynced1")
+                const nsesSync = document.getElementById("nses-synced")
+                const csyncAdded = document.getElementById("csync-added1")
+                const parentNs = document.getElementById("parent-ns-synced1")
+                const nsProp = document.getElementById("ns-propagated1")
+                const dnskeysSync = document.getElementById("dnskeys-synced1")
+		const parentDsSync = document.getElementById("parent-ds-synced1")
+                const cdsAdded = document.getElementById("cds-added1")
+		const stop = document.getElementById("stop1")
+                const stopped = document.getElementById("stopped1")
+			switch(myJson.process){
+                          case "signers-unsynced":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor="#FFFF00";
+                            break;
+                          case "nses-synced":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor="#FFFF00";
+                            break;
+                          case "csync-added":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor="#FFFF00";
+                            break;
+                          case "parent-ns-synced":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "ns-propagated":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "dnskeys-synced":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#FFFF00";
+                            break;
+                          case "cds-added":
+                            signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDsSync.style.backgroundColor = "#FFFF00";
+                            break;
+			  case "parent-ds-synced":
+			    signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDsSync.style.backgroundColor = "#00FF00";
+		    	    stop.style.backgroundColor = "#FFFF00";
+			    break;
+                          case "stop":
+			    signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDsSync.style.backgroundColor = "#00FF00";
+			    stop.style.backgroundColor = "#00FF00";
+                            stopped.style.backgroundColor = "#FFFF00";
+                            break;
+			    
+                          case '':
+			    signerU.style.backgroundColor = "#00FF00";
+                            nsesSync.style.backgroundColor = "#00FF00";
+                            csyncAdded.style.backgroundColor = "#00FF00";
+                            parentNs.style.backgroundColor = "#00FF00";
+                            nsProp.style.backgroundColor = "#00FF00";
+                            dnskeysSync.style.backgroundColor = "#00FF00";
+                            cdsAdded.style.backgroundColor = "#00FF00";
+                            parentDsSync.style.backgroundColor = "#00FF00";                            
+                            stop.style.backgroundColor = "#00FF00";
+			    stopped.style.backgroundColor = "#00FF00";
+                            document.getElementById("removeSigner").disabled = false;
+                            break;
+                        } 
+		}
+		}).catch(function(event){
+		console.log(event)
+		})
+				
+
+                  }
+                    document.addEventListener("DOMContentLoaded", function(event) {
+                    setInterval(updateFunction, 1000) // interval value in milliseconds
+                  })
+                </script>
+-->		
+<p><div id = "error">   </div></p>
+<p>{{zoneList}}</p>		
+</body>	
+</html>

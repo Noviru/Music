@@ -1,0 +1,79 @@
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: #04AA6D;
+}
+
+#container1{
+  float: left;
+}
+
+ 
+
+
+#container2{
+  display: none;
+}
+
+#dns-key-synced{
+  border: 1px solid black;
+}
+#signer-unsynced{
+  border: 1px solid black;
+}
+#cds-added{
+  border: 1px solid black;
+}
+#parent-ds-synced{
+  border: 1px solid black;
+}
+#stop{
+  border: 1px solid black;
+}
+#stopped{
+  border: 1px solid black;
+}
+#parent-ns-synced{
+  border: 1px solid black;
+}
+
+#csync-added {
+  border: 1px solid black;  
+}
+#ds-propagated{
+  border: 1px solid black;
+}
+#ns-propagated1{
+  border: 1px solid black;
+}
+#signer-unsynced1{
+  border: 1px solid black;
+}
+#nses-synced{
+  border: 1px solid black;
+}
+#csync-added1{
+  border: 1px solid black;
+}
+#parent-ns-synced1{
+  border: 1px solid black;
+}
+#dnskeys-synced1{
+  border: 1px solid black;
+}
+#cds-added1{
+  border: 1px solid black;
+}
+#stop1{
+  border: 1px solid black;
+}
+#stopped1{
+  border: 1px solid black;
+}
+#parent-ds-synced1{
+  border: 1px solid black;
+}
